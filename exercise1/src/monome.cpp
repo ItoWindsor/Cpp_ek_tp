@@ -24,6 +24,15 @@ Monome_t& Monome_t::operator+=(const Monome_t &other) {
     return *this;
 }
 
+Monome_t& Monome_t::operator-=(const Monome_t &other) {
+    if (this->degree != other.get_degree() ) {
+        throw std::invalid_argument("Degrees must match to add monomials.");
+    }
+    this->coeff -= other.get_coeff();
+
+    return *this;
+}
+
 std::string Monome_t::to_string() const{
     std::string str = std::to_string(get_coeff());
     if(get_degree() > 0) {

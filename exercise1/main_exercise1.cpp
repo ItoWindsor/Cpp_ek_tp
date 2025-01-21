@@ -25,6 +25,8 @@ int main() {
   std::cout << "P2 >= P1 ? " << (P2 >= P1) << std::endl;
 
   P4 += P1;
+  P2 -= P1;
 
   std::cout << "P4 = " << P4 << std::endl;
+  std::cout << "P2 = " << P2 << std::endl;
 }
