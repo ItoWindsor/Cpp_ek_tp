@@ -1,43 +1,35 @@
 cmake_minimum_required(VERSION 3.16)
 project(TP_EK_CPP LANGUAGES CXX)
 
+# Configuration de la version de C++
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Define the list of subdirectories for exercises
-set(SUBDIRS exercise1)
+# Définir les répertoires des sources, des headers et des tests
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
+set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
+set(TEST_DIR ${CMAKE_SOURCE_DIR}/test)
 
-# Add each exercise subdirectory
-foreach(subdir IN LISTS SUBDIRS)
-    add_subdirectory(${subdir})
-endforeach()
+# Inclure les headers
+include_directories(${INCLUDE_DIR})
 
-# Google Test configuration
-add_subdirectory(external/googletest) # Include Google Test
-enable_testing()                      # Enable testing
+# Ajouter les fichiers sources et headers
+file(GLOB_RECURSE SOURCES "${SRC_DIR}/*.cpp")
+file(GLOB_RECURSE HEADERS "${INCLUDE_DIR}/*.hpp")
 
-# Add the 'test' directory for unit tests
-add_subdirectory(test)
+# Créer la bibliothèque principale
+add_library(tp_ek_cpp_lib ${SOURCES} ${HEADERS})
 
-# Help and clean_all targets
-add_custom_target(show_help
-        COMMAND ${CMAKE_COMMAND} -E echo "Usage: cmake --build . --target [target]"
-        COMMAND ${CMAKE_COMMAND} -E echo "Targets:"
-        COMMAND ${CMAKE_COMMAND} -E echo "  exercise1     Build and output to exercise1/"
-        COMMAND ${CMAKE_COMMAND} -E echo "  tests         Build and run unit tests in 'test/'"
-)
+# Configuration de Google Test
+add_subdirectory(external/googletest) # Inclure Google Test
+enable_testing()                      # Activer les tests unitaires
 
-add_custom_target(tests
-        COMMAND ${CMAKE_COMMAND} -E echo "Running tests..."
-        COMMAND ctest --verbose
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-        COMMENT "Running all tests"
-)
+# Ajouter les fichiers de test
+file(GLOB_RECURSE TEST_SOURCES "${TEST_DIR}/*.cpp")
+add_executable(tp_ek_cpp_tests ${TEST_SOURCES})
 
-add_custom_target(clean_all
-        COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}
-        COMMAND ${CMAKE_COMMAND} -E echo "Removed build directory: ${CMAKE_BINARY_DIR}"
-        COMMAND ${CMAKE_COMMAND} -E remove -f
-        ${CMAKE_SOURCE_DIR}/exercise1/exercise1.exe
-        COMMENT "Removing all build files and executables..."
-)
+# Lier les bibliothèques nécessaires
+target_link_libraries(tp_ek_cpp_tests gtest gtest_main tp_ek_cpp_lib)
+
+# Activer les tests
+add_test(NAME all_tests COMMAND tp_ek_cpp_tests)

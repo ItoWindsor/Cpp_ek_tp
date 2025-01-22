@@ -1,30 +1,33 @@
 # test/CMakeLists.txt
 
-# Collect test source files (e.g., test_exercise1.cpp)
+# Collect test source files
 set(TEST_SRC_DIR src)
-set(TEST_INC_DIR include)
-
-# Collect source files for the tests
 file(GLOB TEST_SRC_FILES ${TEST_SRC_DIR}/*.cpp)
 
-# Specify Monome.cpp as a source file to be included in the test build
-list(APPEND TEST_SRC_FILES ${CMAKE_SOURCE_DIR}/exercise1/src/Monome.cpp)
-
-# Define the test executable
-add_executable(test_exercise1 ${TEST_SRC_FILES} test_exercise1.cpp)
-
-# Include necessary directories (e.g., Monome.hpp)
-target_include_directories(test_exercise1 PRIVATE
-        ${CMAKE_SOURCE_DIR}/exercise1/include
+# Common source files for both tests
+set(COMMON_SRC_FILES
+        ${CMAKE_SOURCE_DIR}/exercise1/src/monome.cpp
+        ${CMAKE_SOURCE_DIR}/exercise1/src/polynome.cpp
 )
 
-# Link Google Test and pthread (for Unix-based systems)
-target_link_libraries(test_exercise1 gtest gtest_main pthread)
+# Define test executables
+add_executable(test_monome ${COMMON_SRC_FILES} test_monome.cpp)
+add_executable(test_polynome ${COMMON_SRC_FILES} test_polynome.cpp)
 
-# Specify the output directory for the test executable (in the 'test' folder inside the build-debug directory)
-set_target_properties(test_exercise1 PROPERTIES
+# Include directories for the test targets
+target_include_directories(test_monome PRIVATE ${CMAKE_SOURCE_DIR}/exercise1/include)
+target_include_directories(test_polynome PRIVATE ${CMAKE_SOURCE_DIR}/exercise1/include)
+
+# Link Google Test and pthread to the test executables using the 'PRIVATE' keyword
+target_link_libraries(test_monome PRIVATE gtest gtest_main pthread)
+target_link_libraries(test_polynome PRIVATE gtest gtest_main pthread)
+
+# Set output directory for the test executables
+set_target_properties(test_monome test_polynome PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test
+        FOLDER "test"
 )
 
-# Register the test with CTest
-add_test(NAME TestExercise1 COMMAND test_exercise1)
+# Register tests with CTest
+add_test(NAME TestMonome COMMAND test_monome)
+add_test(NAME TestPolynome COMMAND test_polynome)

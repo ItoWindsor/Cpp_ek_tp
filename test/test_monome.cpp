@@ -51,3 +51,11 @@ TEST(MonomeTest, ToString) {
     EXPECT_EQ(m.to_string(), "5X^3");  // Ensure the to_string method outputs correctly
 }
 
+TEST(MonomeTest, MultiMonome) {
+    Monome_t m1(5, 3);
+    Monome_t m2(4, 2);
+    Monome_t m3 = m1 * m2;
+    Monome_t m4(20,5);
+    EXPECT_EQ(m3 == m4, true);
+}
+

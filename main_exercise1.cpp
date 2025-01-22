@@ -26,7 +26,9 @@ int main() {
 
   P4 += P1;
   P2 -= P1;
+  Monome_t P5 = P1*P2;
 
   std::cout << "P4 = " << P4 << std::endl;
   std::cout << "P2 = " << P2 << std::endl;
+  std::cout << "P5 = " << P5 << std::endl;
 }

@@ -1,8 +1,6 @@
 #include <iostream>
 #include "monome.hpp"
 
-#include <float.h>
-
 Monome_t::Monome_t(int coeff, unsigned int degree)
   :coeff(coeff),degree(degree)
   {}
@@ -21,6 +19,12 @@ Monome_t& Monome_t::operator+=(const Monome_t &other) {
     }
     this->coeff += other.get_coeff();
 
+    return *this;
+}
+
+Monome_t& Monome_t::operator*=(const Monome_t &other) {
+    this->coeff *= other.get_coeff();
+    this->degree += other.get_degree();
     return *this;
 }
 
@@ -71,5 +75,13 @@ bool operator >= (Monome_t const& X1, Monome_t const& X2) {
     return (X1 > X2) || (X1 == X2);
 }
 
+Monome_t operator*(Monome_t const& X1, Monome_t const& X2) {
+    int new_coeff = X1.get_coeff() * X2.get_coeff();
+    unsigned int new_degree = X1.get_degree() + X2.get_degree();
+
+    Monome_t temp(new_coeff,new_degree);
+
+    return temp;
+}
 
 
